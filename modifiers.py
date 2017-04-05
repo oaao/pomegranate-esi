@@ -1,30 +1,42 @@
 # universal modifiers for functions
+# functools' wraps preserves any names and (future) docstrings of original functions when called with decorators
+
+from functools import wraps
 import time
 
 
-def timed():
-    pass
+def timed(func):
+    @wraps(func)
+    def timer(*args, **kwargs):
+        before = time.time()
+        f_result = func(*args, **kwargs)
+        duration = round(time.time() - before, 7)
+        print(f'{duration}s | {func.__name__} was called with args {args} and kwargs {kwargs}')
+        return f_result
+    return timer
 
 
 def logged():
     pass
 
 
+# TO DO: try to make this thread-safe for asyncio in future code elsewhere, because this uses time.sleep()
 def rate_limited(max_per_sec):
     # Refactored from: http://stackoverflow.com/a/667706
     # Used under the MIT License with reasonable attribution as per Stack Overflow policy dating 2016-03-01.
     min_interval = 1.0 / float(max_per_sec)
 
-    def decorate(func):
-        last_called = [0.0]
+    def limit(func):
+        before = [0.0]
 
-        def rate_limited_function(*args, **kwargs):
-            elapsed = time.clock() - last_called[0]
-            left_to_wait = min_interval - elapsed
-            if left_to_wait > 0:
-                time.sleep(left_to_wait)
-            ret = func(*args, **kwargs)
-            last_called[0] = time.clock()
-            return ret
-        return rate_limited_function
-    return decorate
+        @wraps(func)
+        def force_wait(*args, **kwargs):
+            duration = time.time() - before[0]
+            wait_time = min_interval - duration
+            if wait_time > 0:
+                time.sleep(wait_time)
+            f_result = func(*args, **kwargs)
+            before[0] = time.time()
+            return f_result
+        return force_wait
+    return limit
