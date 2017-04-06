@@ -1,0 +1,11 @@
+BUGFIX----- modifiers.py -- rate-limiting decorator should not conflict with asyncio code via time.sleep()
+
+REPLACE---- io /http.py --- substitute requests-futures functionality with aiohttp handler class
+REPLACE---- juice.py ------ rewrite this haggard mess
+
+COMPLETE--- io /db.py ----- database handler
+COMPLETE--- modifiers.py -- logging decorator
+COMPLETE--- main.py ------- input from other modules and output as per project progress stage
+COMPLETE--- seeds.py ------ accept organised data and store it to dbs
+
+ADD---new-- gather.py ----- determine citadel markets that surround NPC market hubs
