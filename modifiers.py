@@ -15,8 +15,8 @@ def timed(func):
     def timer(*args, **kwargs):
         before = time.time()
         f_result = func(*args, **kwargs)
-        duration = round(time.time() - before, 7)
-        print(f'{duration}s | {func.__name__} was called with args {args} and kwargs {kwargs}')
+        duration = round(time.time() - before, 8)
+        print('{} | {} called with args {} and kwargs {!r}'.format(duration, func.__name__, args, kwargs))
         return f_result
     return timer
 
