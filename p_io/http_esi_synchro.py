@@ -7,6 +7,7 @@ import requests
 
 # consider using an inheritance model for orders/citadel/history esp. since their data will be used differently anyhow
 
+
 class EsiMarketClient:
 
     ESI_URL = 'https://esi.tech.ccp.is/latest/'
