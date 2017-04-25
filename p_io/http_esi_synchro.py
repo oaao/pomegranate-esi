@@ -53,7 +53,7 @@ class EsiMarketClient:
     @modifiers.timed
     def get_orders(self, pages):
         print('\nGetting market orders for {}:'.format(self.hub))
-        url        = self._url_format('orders', self.region_id) + '?page={}'
+        url        = self._url_format('orders', str(self.region_id)) + '?page={}'
         order_urls = [url.format(x) for x in range(1, pages+1)]
 
         self.orders = self._retrieve(order_urls)
@@ -67,7 +67,5 @@ class EsiMarketClient:
         # not currently accounted for
         pass
 
-
 # rens = EsiMarketClient('rens')
 # rens.get_orders(pages=10)
-
