@@ -18,10 +18,10 @@ class EsiMarketClient:
         'citadels': 'markets/structures/{}/'
     }
 
-    def __init__(self, hub):
-        hub_data = config.get_hub(hub)
+    def __init__(self, hub_name):
+        hub_data = config.get_hub(hub_name)
 
-        self.hub        = hub
+        self.hub        = hub_name
         self.region_id  = hub_data['region_id']
         # self.system_id  = hub_data['system_id']
         # self.station_id = hub_data['station_id']
