@@ -21,7 +21,7 @@ class EsiMarketClient:
     def __init__(self, hub_name):
         hub_data = config.get_hub(hub_name)
 
-        self.hub        = hub_name
+        self.hub        = hub_name.lower()
         self.region_id  = hub_data['region_id']
         # self.system_id  = hub_data['system_id']
         # self.station_id = hub_data['station_id']
@@ -66,6 +66,3 @@ class EsiMarketClient:
     def get_citadels(self):
         # not currently accounted for
         pass
-
-# rens = EsiMarketClient('rens')
-# rens.get_orders(pages=10)
