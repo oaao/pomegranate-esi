@@ -12,7 +12,7 @@ def get_hub(hub_name):
         'rens':    (10000030, 30002510, 60004588)
     }
 
-    if hub_name in hub_ids:
+    if hub_name.lower() in hub_ids:
         hub_data = {k: v for k, v in zip(hub_key, hub_ids[hub_name.lower()])}
 
         return hub_data
