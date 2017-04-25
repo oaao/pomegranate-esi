@@ -14,14 +14,14 @@ from operator import itemgetter
 from itertools import groupby
 
 
-def market_import(hub_name, pages):
+def orders_import(hub_name, pages):
     importer = http_esi_synchro.EsiMarketClient(hub_name)
     importer.get_orders(pages)
     return importer.orders
 
 
-def market_distill(hub_name, pages):
-    data_raw = market_import(hub_name.lower(), pages)
+def orders_distill(hub_name, pages):
+    data_raw = orders_import(hub_name.lower(), pages)
 
     # filter out all NPC-station regional orders that are not in the hub's station
     # sloppily accounts for citadel orders - does not currently restrict by range to hub
