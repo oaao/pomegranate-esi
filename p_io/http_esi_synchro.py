@@ -19,7 +19,7 @@ class EsiMarketClient:
     }
 
     def __init__(self, hub):
-        hub_data = config.get_station(hub)
+        hub_data = config.get_hub(hub)
 
         self.hub        = hub
         self.region_id  = hub_data['region_id']

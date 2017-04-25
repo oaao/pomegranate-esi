@@ -1,13 +1,18 @@
 # static configurations
 
 
-def get_station(hub_name):
-    hubs = {
-        'jita':    {'region_id': '10000002', 'system_id': '30000142', 'station_id': '60003760'},
-        'amarr':   {'region_id': '10000043', 'system_id': '30002187', 'station_id': '60008494'},
-        'dodixie': {'region_id': '10000032', 'system_id': '30002659', 'station_id': '60011866'},
-        'hek':     {'region_id': '10000042', 'system_id': '30002053', 'station_id': '60005686'},
-        'rens':    {'region_id': '10000030', 'system_id': '30002510', 'station_id': '60004588'}
+def get_hub(hub_name):
+
+    hub_key = ['region_id', 'system_id', 'station_id']
+    hub_ids = {
+        'jita':    ('10000002', '30000142', '60003760'),
+        'amarr':   ('10000043', '30002187', '60008494'),
+        'dodixie': ('10000032', '30002659', '60011866'),
+        'hek':     ('10000042', '30002053', '60005686'),
+        'rens':    ('10000030', '30002510', '60004588')
     }
-    hub_id = hubs[hub_name.lower()]
-    return hub_id
+
+    if hub_name in hub_ids:
+        hub_data = {k: v for k, v in zip(hub_key, hub_ids[hub_name.lower()])}
+
+        return hub_data
