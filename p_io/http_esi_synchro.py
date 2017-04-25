@@ -19,7 +19,7 @@ class EsiMarketClient:
     }
 
     def __init__(self, hub_name):
-        hub_data = config.get_hub(hub_name)
+        hub_data = config.get_hub(hub_name.lower())
 
         self.hub        = hub_name.lower()
         self.region_id  = hub_data['region_id']
@@ -27,7 +27,7 @@ class EsiMarketClient:
         # self.station_id = hub_data['station_id']
 
         self.orders   = []
-        # self.history  = []    # class not currently structured with market history in mind
+        self.history  = []
         # self.citadels = []    # class not currently structured with market history in mind
 
     def _url_format(self, req_type, num_id):
@@ -59,9 +59,14 @@ class EsiMarketClient:
         self.orders = self._retrieve(order_urls)
         print('\nGot {} market orders.'.format(len(self.orders)))
 
-    def get_history(self):
-        # not currently accounted for
-        pass
+    @modifiers.timed
+    def get_history(self, type_ids):
+        print('\nGetting market history for {}:'.format(self.hub))
+        url          = self._url_format('history', str(self.region_id)) + '?type_id={}'
+        history_urls = [url.format(x) for x in type_ids]
+
+        self.history = self._retrieve(history_urls)
+        print('\nGot {} market history elements for {} given type IDs.'.format(len(self.history), type_ids))
 
     def get_citadels(self):
         # not currently accounted for

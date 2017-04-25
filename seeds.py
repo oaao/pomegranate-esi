@@ -7,21 +7,25 @@
 # - market histories are pulled once per day per region/hub
 
 from p_io import http_esi_synchro
-
 import config
+
 import arrow
 from operator import itemgetter
 from itertools import groupby
 
 
-def orders_import(hub_name, pages):
+def market_import(req_type, hub_name, *args):
+    call_type = "get_{}".format(req_type)
+
     importer = http_esi_synchro.EsiMarketClient(hub_name)
-    importer.get_orders(pages)
-    return importer.orders
+    getattr(importer, call_type)(*args)
+    market_result = getattr(importer, req_type)
+
+    return market_result
 
 
 def orders_distill(hub_name, pages):
-    data_raw = orders_import(hub_name.lower(), pages)
+    data_raw = market_import('orders', hub_name, pages)
 
     # filter out all NPC-station regional orders that are not in the hub's station
     # sloppily accounts for citadel orders - does not currently restrict by range to hub
@@ -44,11 +48,27 @@ def orders_distill(hub_name, pages):
     data_grouped = [{k: list(v)} for k, v in groupby(data_timestamp, lambda x: x['type_id'])]
 
     # maybe: sub-group by buy vs. sell
+    return data_grouped
 
 
-def market_history():
-    # gimme history
+def orders_store():
+    # store orders to db using p_io/db
     pass
 
 
-# market_distill('rens', 10)
+def history_distill(hub_name, type_ids):
+    data_raw = market_import('history', hub_name, type_ids)
+
+    # filter, manipulate data
+    return data_raw
+
+
+def history_store():
+    # store orders to db using p_io/db
+    pass
+
+
+# print(orders_distill('rens', 3))
+
+# example_types = [22, 29668, 40520]
+# print(history_distill('Rens', example_types))
