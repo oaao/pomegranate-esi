@@ -1,11 +1,17 @@
-BUGFIX----- modifiers.py -- rate-limiting decorator should not conflict with asyncio code via time.sleep()
+BUGFIX----- modifiers.py -- ensure that rate-limiting decorator does not conflict with curio via time.sleep()
 
 REPLACE---- io /http.py --- substitute requests-futures functionality with aiohttp handler class
-REPLACE---- juice.py ------ rewrite this haggard mess
 
-COMPLETE--- io /db.py ----- database handler
+REVISE----- io /http.py --- [synchro] rewrite _retrieve() to deliver data as [{param1: results1}, ...]
+                            --> history endpoint requires type_ID param stored to know what its result belongs to
+
+COMPLETE--- io /http.py --- stable async http, templated from [synchro] class structure
 COMPLETE--- modifiers.py -- logging decorator
 COMPLETE--- main.py ------- input from other modules and output as per project progress stage
-COMPLETE--- seeds.py ------ accept organised data and store it to dbs
+COMPLETE--- seeds.py ------ complete historical data processing, citadels; finalise data processing; db storage
+COMPLETE--- juice.py ------
 
 ADD---new-- gather.py ----- determine citadel markets that surround NPC market hubs
+ADD---exst- io /http.py --- [synchro] HTTP headers: accept json, user-agent, gzip encoding (use cdn)
+ADD---exst- io /db.py ----- create database handler
+ADD---exst- juice.py ------ read from db, perform analysis, cache the data somehow
