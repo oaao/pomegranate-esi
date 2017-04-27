@@ -43,7 +43,7 @@ def orders_distill(hub_name, pages):
     for i in data_timestamp:
         i['issued'] = arrow.get(i['issued']).timestamp
 
-    # group by typeID
+    # group by typeID; first, sort data, since this is required by groupby()
     data_timestamp.sort(key=itemgetter('type_id'))
     data_grouped = [{k: list(v)} for k, v in groupby(data_timestamp, lambda x: x['type_id'])]
 
@@ -64,11 +64,20 @@ def history_distill(hub_name, type_ids):
 
 
 def history_store():
-    # store orders to db using p_io/db
+    # store history to db using p_io/db
     pass
 
 
-# print(orders_distill('rens', 3))
+# example: market orders in Rens with current code
+'''
+rens_by_type_id = orders_distill('Rens', 10)
+rens_ungrouped  = [x for page in rens_by_type_id for order in list(page.values()) for x in order]
+print('Rens currently has {} traded typeIDs with a total of {} market orders.'
+      .format(len(rens_by_type_id), len(rens_ungrouped)))
+'''
 
-# example_types = [22, 29668, 40520]
-# print(history_distill('Rens', example_types))
+# example: market history in Rens with current code
+'''
+example_type_ids = [22, 29668, 40520]
+rens_history = history_distill('Rens', example_type_ids)
+'''
