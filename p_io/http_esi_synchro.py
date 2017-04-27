@@ -36,7 +36,7 @@ class EsiMarketClient:
     # fully abstracted retrieval once differences between orders, history, citadels are properly understood
     # currently only supports one parameter per call
     def _retrieve(self, req_type, params):
-        url        = self._url_format(req_type, str(self.region_id))
+        url                      = self._url_format(req_type, str(self.region_id))
         param_name, param_values = params
 
         # retries  = []
