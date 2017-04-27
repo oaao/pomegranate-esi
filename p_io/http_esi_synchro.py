@@ -28,13 +28,16 @@ class EsiMarketClient:
 
         self.orders   = []
         self.history  = []
-        # self.citadels = []    # class not currently structured with market history in mind
+        # self.citadels = []    # class not currently structured with citadel endpoint in mind
 
     def _url_format(self, req_type, num_id):
         return self.ESI_URL + self.ESI_ENDPTS[req_type].format(num_id)
 
     # fully abstracted retrieval once differences between orders, history, citadels are properly understood
-    def _retrieve(self, url_list):
+    # currently only supports one parameter per call
+    def _retrieve(self, req_type, params):
+        url        = self._url_format(req_type, str(self.region_id))
+        param_name, param_values = params
 
         # retries  = []
         # failures = {}
@@ -42,31 +45,30 @@ class EsiMarketClient:
         data     = []
 
         with requests.Session() as s:
-            for url in url_list:
-                print('\nTrying: {}'.format(url))
-                resp = s.get(url)
+            for param_val in param_values:
+                param = {param_name: param_val}
+                print('\nTrying: {} with param {}'.format(url, param))
+                resp = s.get(url, params=param)
                 print('Status {} ---- {} results.'.format(resp.status_code, len(resp.json())))
                 if resp.status_code == 200 and resp.json():    # placeholder validation
-                    data += resp.json()
+                    data.append({param_val: resp.json()})
+
         return data
 
     @modifiers.timed
     def get_orders(self, pages):
-        print('\nGetting market orders for {}:'.format(self.hub))
-        url        = self._url_format('orders', str(self.region_id)) + '?page={}'
-        order_urls = [url.format(x) for x in range(1, pages+1)]
+        params      = ('page', range(1, pages+1))
 
-        self.orders = self._retrieve(order_urls)
+        unflattened = self._retrieve('orders', params)
+        self.orders = [x for page in unflattened for order in list(page.values()) for x in order]
         print('\nGot {} market orders.'.format(len(self.orders)))
 
     @modifiers.timed
     def get_history(self, type_ids):
-        print('\nGetting market history for {}:'.format(self.hub))
-        url          = self._url_format('history', str(self.region_id)) + '?type_id={}'
-        history_urls = [url.format(x) for x in type_ids]
+        params       = ('type_id', type_ids)
 
-        self.history = self._retrieve(history_urls)
-        print('\nGot {} market history elements for {} given type IDs.'.format(len(self.history), type_ids))
+        self.history = self._retrieve('history', params)
+        print('\nGot {} market history elements for {} given type IDs.'.format(len(self.history), len(type_ids)))
 
     def get_citadels(self):
         # not currently accounted for
