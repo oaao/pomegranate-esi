@@ -2,7 +2,6 @@ BUGFIX----- modifiers.py -- ensure that rate-limiting decorator does not conflic
 
 REPLACE---- io /http_esi.py --- substitute requests-futures functionality with curio+asks handler class
 
-COMPLETE--- io /http_esi.py --- stable async http, templated from [synchro] class structure
 COMPLETE--- io /http_esi.py --- [synchro] write logic for URL retries and failures
 COMPLETE--- modifiers.py -- logging decorator
 COMPLETE--- main.py ------- input from other modules and output as per project progress stage
