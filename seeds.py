@@ -6,7 +6,7 @@
 # - orderbooks are pulled as frequently as possible
 # - market histories are pulled once per day per region/hub
 
-from p_io import http_esi_synchro
+from p_io import http_esi_rf
 import config
 
 import arrow
@@ -17,7 +17,7 @@ from itertools import groupby
 def market_import(req_type, hub_name, *args):
     call_type = "get_{}".format(req_type)
 
-    importer = http_esi_synchro.EsiMarketClient(hub_name)
+    importer = http_esi_rf.EsiMarketClient(hub_name)
     getattr(importer, call_type)(*args)
     market_result = getattr(importer, req_type)
 
@@ -66,18 +66,3 @@ def history_distill(hub_name, type_ids):
 def history_store():
     # store history to db using p_io/db
     pass
-
-
-# example: market orders in Rens with current code
-'''
-rens_by_type_id = orders_distill('Rens', 10)
-rens_ungrouped  = [x for page in rens_by_type_id for order in list(page.values()) for x in order]
-print('Rens currently has {} traded typeIDs with a total of {} market orders.'
-      .format(len(rens_by_type_id), len(rens_ungrouped)))
-'''
-
-# example: market history in Rens with current code
-'''
-example_type_ids = [22, 29668, 40520]
-rens_history = history_distill('Rens', example_type_ids)
-'''

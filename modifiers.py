@@ -25,7 +25,7 @@ def logged():
     pass
 
 
-# TO DO: try to make this thread-safe for asyncio in future code elsewhere, because this uses time.sleep()
+# TO DO: try to make this thread-safe for async behaviour in future code elsewhere, because this uses time.sleep()
 def rate_limited(max_per_sec):
     # Refactored from: http://stackoverflow.com/a/667706
     # Used under the MIT License with reasonable attribution as per Stack Overflow policy dating 2016-03-01.
