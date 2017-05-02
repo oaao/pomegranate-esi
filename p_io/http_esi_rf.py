@@ -40,6 +40,10 @@ class EsiMarketClient:
     def _url_format(self, req_type, num_id):
         return self.ESI_URL + self.ESI_ENDPTS[req_type].format(num_id)
 
+    @modifiers.rate_limited(20)
+    def _get_once(self, session, url, params):
+        return session.get(url, params=params)
+
     # fully abstracted retrieval once differences between orders, history, citadels are properly understood
     # currently only supports one parameter per call
     def _retrieve(self, req_type, params):
@@ -52,11 +56,11 @@ class EsiMarketClient:
         futures  = []
         data     = []
 
-        with FuturesSession(max_workers=10) as s:
+        with FuturesSession(max_workers=5) as s:
             logging.info('Sending requests to ESI API')
             for param_val in param_values:
                 param  = {param_name: param_val}
-                future = s.get(url, params=param)
+                future = self._get_once(s, url, param)
                 futures.append(future)
 
             logging.info('Requests sent; awaiting responses')
