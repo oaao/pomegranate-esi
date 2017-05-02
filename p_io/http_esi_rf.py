@@ -56,7 +56,7 @@ class EsiMarketClient:
         futures  = []
         data     = []
 
-        with FuturesSession(max_workers=5) as s:
+        with FuturesSession(max_workers=10) as s:
             logging.info('Sending requests to ESI API')
             for param_val in param_values:
                 param  = {param_name: param_val}
