@@ -1,6 +1,7 @@
 BUGFIX----- modifiers.py -- ensure that rate-limiting decorator does not conflict with curio via time.sleep()
 
 REPLACE---- io /http_esi.py --- substitute requests-futures functionality with curio+asks handler class
+REPLACE---- G L O B A L ------- reassess usage of lists/dicts/tuples for saner nested data structure processing
 
 COMPLETE--- io /http_esi.py --- [synchro] write logic for URL retries and failures
 COMPLETE--- modifiers.py -- logging decorator
